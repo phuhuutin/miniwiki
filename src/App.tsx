@@ -1,9 +1,10 @@
 import "./App.css";
+import { PostComponent } from "./Components/PostComponent";
 
 function App() {
   return (
     <div className='App'>
-      <p>Hello There</p>
+      <PostComponent />
     </div>
   );
 }
