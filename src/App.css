@@ -1,0 +1,35 @@
+/* .postimg {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+} */
+/* .headerPost {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.headerPost p {
+  margin: 0px;
+}
+
+.postContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.singlePost {
+}   */
+
+.grid-item {
+  width: 33.333%;
+}
+.grid-item {
+  float: left;
+}
+
+.grid-item img {
+  display: block;
+  max-width: 100%;
+}

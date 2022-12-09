@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
+import { Row, Col } from "react-bootstrap";
 import { ShowingPost } from "./ShowingPost";
 
 import { data, Post } from "./Type";
@@ -16,14 +18,18 @@ export const PostComponent: React.FC<{}> = () => {
   };
 
   return (
-    <div className='postContainer'>
-      {posts?.map((post) => (
-        <ShowingPost
-          key={post.id}
-          post={post}
-          handleDeletePost={handleDeletePost}
-        />
-      ))}
-    </div>
+    <>
+      <div className='container-fluid'>
+        <div className='grid'>
+          {posts?.map((post) => (
+            <ShowingPost
+              key={post.id}
+              post={post}
+              handleDeletePost={handleDeletePost}
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
