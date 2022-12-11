@@ -19,8 +19,8 @@ export const PostComponent: React.FC<{}> = () => {
 
   return (
     <>
-      <div className='container-fluid'>
-        <div className='grid'>
+      <div className='h-auto'>
+        <div className='flex flex-wrap flex-row h-auto'>
           {posts?.map((post) => (
             <ShowingPost
               key={post.id}

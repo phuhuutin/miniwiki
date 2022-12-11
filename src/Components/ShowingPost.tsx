@@ -9,22 +9,25 @@ export const ShowingPost = ({
   handleDeletePost,
 }: PostProps) => {
   return (
-    <div className='grid-item'>
-      {/* <div className='headerPost'>
-        <p>{username}</p>
-        <Button
-          className=''
-          onClick={() => {
-            handleDeletePost(id);
-          }}
-        >
-          Delete 
-        </Button>
-      </div> */}
+    <div className=' w-2/6 '>
+      <div className='shadow m-2 p-2 h-auto'>
+        <div className='flex items-center justify-between'>
+          <span>{username}</span>
 
-      <img src={imgUrl} />
+          <Button
+            className=''
+            onClick={() => {
+              handleDeletePost(id);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
 
-      <div className='footerPost'>{texts}</div>
+        <img className=' 	 ' src={imgUrl} />
+
+        <p className='truncate'> {title}</p>
+      </div>
     </div>
   );
 };
