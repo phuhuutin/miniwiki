@@ -6,10 +6,40 @@ import { ShowingPost } from "./ShowingPost";
 import { data, Post } from "./Type";
 export const PostComponent: React.FC<{}> = () => {
   const [posts, setPosts] = useState<Post[]>();
-  const [singlePost, setSinglePost] = useState<Post>();
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState(null);
   useEffect(() => {
-    setPosts(data);
+    const fetchPosts = async () => {
+      const baseUrl: string = "http://localhost:8081/api/posts";
+      const url: string = `${baseUrl}?page=0&size=9`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+
+      const responseJson = await response.json();
+      const responseData = responseJson._embedded.posts;
+      const loadedPosts: Post[] = [];
+
+      for (const key in responseData) {
+        loadedPosts.push({
+          id: responseData[key].id,
+          username: responseData[key].userId,
+          title: responseData[key].title,
+          texts: responseData[key].body,
+          imgUrl: responseData[key].imgUrl,
+          likeCount: 0,
+        });
+      }
+
+      setPosts(loadedPosts);
+      setIsLoading(false);
+    };
+
+    fetchPosts().catch((error: any) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
   }, []);
 
   const handleDeletePost = (id: number): void => {
@@ -17,10 +47,24 @@ export const PostComponent: React.FC<{}> = () => {
     setPosts(updatedPosts);
   };
 
+  if (isLoading) {
+    return (
+      <div className='container m-5'>
+        <p>Loading</p>
+      </div>
+    );
+  }
+
+  if (httpError) {
+    <div className=' container m-5'>
+      <p>{httpError}</p>
+    </div>;
+  }
+
   return (
     <>
-      <div className='h-auto'>
-        <div className='flex flex-wrap flex-row h-auto'>
+      <>
+        <div className='grid grid-cols-3 gap-4'>
           {posts?.map((post) => (
             <ShowingPost
               key={post.id}
@@ -29,7 +73,7 @@ export const PostComponent: React.FC<{}> = () => {
             />
           ))}
         </div>
-      </div>
+      </>
     </>
   );
 };

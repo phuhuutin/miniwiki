@@ -3,15 +3,18 @@ import { Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/esm/Image";
 import Stack from "react-bootstrap/esm/Stack";
-import { PostProps } from "./Type";
-export const ShowingPost = ({
+import { Post, PostProps } from "./Type";
+export const ShowingPost: React.FC<{
+  post: Post;
+  handleDeletePost: (id: number) => void;
+}> = ({
   post: { id, username, title, texts, imgUrl, likeCount },
   handleDeletePost,
 }: PostProps) => {
   return (
-    <div className=' w-2/6 '>
-      <div className='shadow m-2 p-2 h-auto'>
-        <div className='flex items-center justify-between'>
+    <div className=' w-full h-full'>
+      <div className=' m-2 p-2 h-full'>
+        <div className='flex items-center justify-between shadow'>
           <span>{username}</span>
 
           <Button
@@ -23,10 +26,15 @@ export const ShowingPost = ({
             Delete
           </Button>
         </div>
-
-        <img className=' 	 ' src={imgUrl} />
-
-        <p className='truncate'> {title}</p>
+        <div className='h-4/6 shadow '>
+          <img
+            className='object-contain h-full shadow mx-auto my-auto'
+            src={imgUrl}
+          ></img>
+        </div>
+        <div className='h-1/6 shadow '>
+          <p className=' '>{title}</p>
+        </div>
       </div>
     </div>
   );

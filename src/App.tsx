@@ -5,7 +5,7 @@ import { PostComponent } from "./Components/PostComponent";
 
 function App() {
   return (
-    <div className='App'>
+    <div className='App h-full'>
       <Navbar />
       <PostComponent />
       <FooterComponent />
