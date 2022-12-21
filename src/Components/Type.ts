@@ -1,12 +1,4 @@
-export type Post = {
-  id: number;
-  username: string;
-  title: string;
-  texts: string;
-  imgUrl: string;
-  likeCount: number | 0;
-  commentList?: Comment[];
-};
+import { Post } from "../Models/Post";
 
 export type Comment = {
   id: number;
@@ -103,8 +95,3 @@ export const data: Post[] = [
     likeCount: 99,
   },
 ];
-
-export type PostProps = {
-  post: Post;
-  handleDeletePost: (id: number) => void;
-};

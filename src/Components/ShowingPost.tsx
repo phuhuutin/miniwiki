@@ -3,11 +3,15 @@ import { Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/esm/Image";
 import Stack from "react-bootstrap/esm/Stack";
-import { Post, PostProps } from "./Type";
-export const ShowingPost: React.FC<{
+import { Post } from "../Models/Post";
+
+type PostProps = {
   post: Post;
   handleDeletePost: (id: number) => void;
-}> = ({
+};
+ 
+
+export const ShowingPost = ({
   post: { id, username, title, texts, imgUrl, likeCount },
   handleDeletePost,
 }: PostProps) => {

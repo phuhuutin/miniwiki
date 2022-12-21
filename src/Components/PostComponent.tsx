@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
-import { Row, Col } from "react-bootstrap";
-import { ShowingPost } from "./ShowingPost";
 
-import { data, Post } from "./Type";
-export const PostComponent: React.FC<{}> = () => {
+import { ShowingPost } from "./ShowingPost";
+import { Post } from "../Models/Post";
+import { SpinnerLoading } from "../Utils/SpinnerLoading";
+
+export const PostComponent = () => {
   const [posts, setPosts] = useState<Post[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
@@ -48,11 +48,7 @@ export const PostComponent: React.FC<{}> = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className='container m-5'>
-        <p>Loading</p>
-      </div>
-    );
+    return <SpinnerLoading />;
   }
 
   if (httpError) {
