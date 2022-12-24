@@ -5,7 +5,7 @@ export const Navbar: React.FC<{}> = () => {
   const [login, setLogin] = useState(true);
 
   return (
-    <nav className=' shadow bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded'>
+    <nav className=' shadow bg-gray-100 border-gray-200 px-2 sm:px-4 py-2.5 rounded'>
       <div className='container flex flex-wrap items-center justify-between mx-auto'>
         <NavLink className='flex items-center' to={"/home"}>
           {/* <img

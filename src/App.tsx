@@ -11,7 +11,6 @@ function App() {
     <div className='App flex flex-col h-screen justify-between'>
       <Navbar />
       <Switch>
-        {/* <PostComponent /> */}
         <Route path={"/"} exact>
           <Redirect to={"/home"} />
         </Route>
