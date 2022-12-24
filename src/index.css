@@ -1,5 +1,11 @@
 @tailwind base;
 @tailwind components;
+@layer components {
+  /* A button base shape. */
+  .btn {
+    @apply text-white bg-pink-300 hover:bg-pink-200 text-center;
+  }
+}
 @tailwind utilities;
 body {
   margin: 0;

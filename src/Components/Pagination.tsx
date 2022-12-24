@@ -41,25 +41,43 @@ export const Pagination = ({
   return (
     <nav aria-label='Page navigation example  '>
       <ul className='inline-flex -space-x-px my-5'>
-        <li onClick={() => paginate(1)}>
-          <button className='px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'>
+        <li onClick={() => paginate(1)} className='pl-1'>
+          <button className='px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-lg '>
             First
           </button>
         </li>
-        {pageNumbers.map((number) => (
-          <li
-            key={number}
-            onClick={() => paginate(number)}
-            className={"page-item " + (currentPage === number ? "active" : "")}
-          >
-            <button className='page-link px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'>
-              {number}
-            </button>
-          </li>
-        ))}
+        {pageNumbers.map((number) =>
+          number === currentPage ? (
+            <li
+              key={number}
+              onClick={() => paginate(number)}
+              className={
+                "pl-1 " +
+                "page-item " +
+                (currentPage === number ? "active" : "")
+              }
+            >
+              <button className='page-link px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 bg-pink-100 rounded-lg  active'>
+                {number}
+              </button>
+            </li>
+          ) : (
+            <li
+              key={number}
+              onClick={() => paginate(number)}
+              className={
+                "pl-1 page-item " + (currentPage === number ? "active" : "")
+              }
+            >
+              <button className='page-link px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-lg  '>
+                {number}
+              </button>
+            </li>
+          )
+        )}
 
-        <li onClick={() => paginate(totalPages)}>
-          <button className='px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'>
+        <li onClick={() => paginate(totalPages)} className='pl-1'>
+          <button className='px-3 py-2 ml-0 leading-tight text-gray-500  border border-gray-300 rounded-lg  '>
             Last
           </button>
         </li>

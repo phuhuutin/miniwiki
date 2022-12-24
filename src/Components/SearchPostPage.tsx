@@ -61,7 +61,7 @@ export const SearchPostPage = () => {
 
   if (httpError) {
     return (
-      <div className=' container m-5'>
+      <div className=' my-5 mx-auto'>
         <p>{httpError}</p>
       </div>
     );
@@ -81,7 +81,7 @@ export const SearchPostPage = () => {
     }
   };
   return (
-    <div className='container mx-auto '>
+    <div className='w-4/5 mx-auto w-90'>
       <div className='grid gird-row-2'>
         <div className='flex'>
           <form className='flex items-cente w-4/6 my-5 '>

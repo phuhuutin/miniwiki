@@ -52,9 +52,11 @@ export const PostComponent = () => {
   }
 
   if (httpError) {
-    <div className=' container m-5'>
-      <p>{httpError}</p>
-    </div>;
+    return (
+      <div className='  my-5 mx-auto'>
+        <p>{httpError}</p>
+      </div>
+    );
   }
 
   return (
