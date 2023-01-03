@@ -11,7 +11,7 @@ export const SearchPost = ({
     <Link to={`/post/${id}`}>
       <div className='flex flex-col w-full items-center bg-white border rounded-lg shadow-md md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'>
         <img
-          className='object-cover  h-96  rounded-t-lg  md:w-4/6 sm:w-full  md:rounded-none md:rounded-l-lg'
+          className='object-cover  h-72 rounded-t-lg  md:w-4/6 sm:w-full  md:rounded-none md:rounded-l-lg'
           src={imgUrl}
           alt=''
         />

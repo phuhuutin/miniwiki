@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import { ShowingPost } from "./ShowingPost";
 import { Post } from "../Models/Post";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { useOktaAuth } from "@okta/okta-react";
 
 export const PostComponent = () => {
   const [posts, setPosts] = useState<Post[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
+  const { oktaAuth, authState } = useOktaAuth();
   useEffect(() => {
     const fetchPosts = async () => {
       const baseUrl: string = "http://localhost:8081/api/posts";
@@ -18,6 +20,7 @@ export const PostComponent = () => {
       }
 
       const responseJson = await response.json();
+      console.log(responseJson);
       const responseData = responseJson._embedded.posts;
       const loadedPosts: Post[] = [];
 
@@ -40,6 +43,7 @@ export const PostComponent = () => {
       setIsLoading(false);
       setHttpError(error.message);
     });
+    console.log(authState);
   }, []);
 
   const handleDeletePost = (id: number): void => {

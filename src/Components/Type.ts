@@ -1,11 +1,5 @@
 import { Post } from "../Models/Post";
 
-export type Comment = {
-  id: number;
-  username: string;
-  texts: string;
-};
-
 export const data: Post[] = [
   {
     id: 1,

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Post } from "../Models/Post";
+import { Comment } from "../Models/Comment";
+import { ShowingComment } from "./ShowingComment";
 
 export const SinglePostPage = () => {
   const [post, setPost] = useState<Post>();
+  const [comments, setComments] = useState<Comment[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
 
   const postId = window.location.pathname.split("/")[2];
   useEffect(() => {
     const fetchPosts = async () => {
-      const baseUrl: string = `http://localhost:8081/api/posts/${postId}`;
+      const baseUrl: string = `http://localhost:8081/api/posts/secure/getPostById?postId=${postId}`;
 
       const response = await fetch(baseUrl);
       if (!response.ok) {
@@ -20,14 +23,28 @@ export const SinglePostPage = () => {
 
       const loadedPost: Post = {
         id: responseJson.id,
-        username: responseJson.userId,
+        username: responseJson.user.username,
         title: responseJson.title,
         texts: responseJson.body,
         imgUrl: responseJson.imgUrl,
         likeCount: 0,
       };
+
+      const loadedComments: Comment[] = [];
+
+      for (const key in responseJson.comment) {
+        loadedComments.push({
+          id: responseJson.comment[key].id,
+          username: responseJson.comment[key].user.username,
+          body: responseJson.comment[key].body,
+        });
+      }
+
       setPost(loadedPost);
       setIsLoading(false);
+      setComments(loadedComments);
+
+      console.log(comments);
     };
 
     fetchPosts().catch((error: any) => {
@@ -39,7 +56,7 @@ export const SinglePostPage = () => {
   return (
     <div className=' flex md:flex-row h-auto md:h-fit shadow flex-col '>
       <img
-        className='w-2/3 h-screen w-3/6  m-2 mx-auto object-contain border-solid shadow '
+        className='w-2/3 h-screen   m-2 mx-auto object-contain border-solid shadow '
         src={post?.imgUrl}
         alt={post?.title}
       />
@@ -83,7 +100,7 @@ export const SinglePostPage = () => {
                 d='M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z'
               />
             </svg>
-            <span>8</span>
+            <span>{comments?.length}</span>
           </div>
           <div className='flex mr-2 text-gray-700 text-sm mr-4'>
             <svg
@@ -102,6 +119,14 @@ export const SinglePostPage = () => {
             <span>share</span>
           </div>
         </div>
+        {comments?.map((comment) => (
+          <ShowingComment
+            key={comment.id}
+            id={comment.id}
+            username={comment.username}
+            body={comment.body}
+          />
+        ))}
       </div>
     </div>
   );
