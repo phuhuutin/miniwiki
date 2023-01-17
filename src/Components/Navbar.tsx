@@ -5,7 +5,6 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 
 export const Navbar: React.FC<{}> = () => {
   const { oktaAuth, authState } = useOktaAuth();
-  console.log(authState);
 
   if (!authState) {
     return <SpinnerLoading />;
