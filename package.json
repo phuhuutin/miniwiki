@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@okta/okta-auth-js": "^6.6.1",
-    "@okta/okta-react": "^6.4.3",
-    "@okta/okta-signin-widget": "^6.3.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -15,6 +12,7 @@
     "@types/react-dom": "^18.0.0",
     "flowbite": "^1.6.0",
     "flowbite-react": "^0.3.7",
+    "keycloak-js": "^20.0.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
