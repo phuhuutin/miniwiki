@@ -16,7 +16,7 @@ export const SearchPostPage = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const baseUrl: string = "http://localhost:8081/api/posts";
+      const baseUrl: string = "http://localhost:8081/api/posts/getAll";
       let url: string = `${baseUrl}?page=${
         currentPage - 1
       }&size=${sizeOfEachPage}`;
@@ -29,11 +29,11 @@ export const SearchPostPage = () => {
       }
 
       const responseJson = await response.json();
-      const responseData = responseJson._embedded.posts;
+      const responseData = responseJson.content;
       const loadedPosts: Post[] = [];
       console.log(responseJson);
-      setTotalPages(responseJson.page.totalPages);
-      setTotalElements(responseJson.page.totalElements);
+      setTotalPages(responseJson.totalPages);
+      setTotalElements(responseJson.totalElements);
       for (const key in responseData) {
         loadedPosts.push({
           id: responseData[key].id,
@@ -77,7 +77,7 @@ export const SearchPostPage = () => {
       setSearchUrl("");
     } else {
       setSearchUrl(
-        `/search/findByTitleContaining?title=${search}&page=0&size=${sizeOfEachPage}`
+        `/search/findByTitleContainingOrderByPostdateDesc?title=${search}&page=0&size=${sizeOfEachPage}`
       );
     }
   };

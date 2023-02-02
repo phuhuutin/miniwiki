@@ -12,7 +12,7 @@ export const SinglePostPage = () => {
   const postId = window.location.pathname.split("/")[2];
   useEffect(() => {
     const fetchPosts = async () => {
-      const baseUrl: string = `http://localhost:8081/api/posts/secure/getPostById?postId=${postId}`;
+      const baseUrl: string = `http://localhost:8081/api/posts/getPostById?postId=${postId}`;
 
       const response = await fetch(baseUrl);
       if (!response.ok) {

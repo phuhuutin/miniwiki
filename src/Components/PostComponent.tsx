@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { ShowingPost } from "./ShowingPost";
 import { Post } from "../Models/Post";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
-import { useOktaAuth } from "@okta/okta-react";
 import { CreatePost } from "./CreatePost";
 import { Carousel } from "flowbite-react";
 import { data } from "./Type";
@@ -13,7 +12,7 @@ export const PostComponent = () => {
   const [postCarousel, setPostCarousel] = useState<Post[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
-  const { oktaAuth, authState } = useOktaAuth();
+
   useEffect(() => {
     setPostCarousel(data);
 
@@ -71,13 +70,13 @@ export const PostComponent = () => {
     return <SpinnerLoading />;
   }
 
-  if (httpError) {
-    return (
-      <div className='  my-5 mx-auto'>
-        <p>{httpError}</p>
-      </div>
-    );
-  }
+  // if (httpError) {
+  //   return (
+  //     <div className='  my-5 mx-auto'>
+  //       <p>{httpError}</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
