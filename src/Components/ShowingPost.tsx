@@ -29,28 +29,6 @@ export const ShowingPost = ({
         src={imgUrl}
       />
     </div>
-    // {/* <div className=' m-2 p-2 h-full'>
-    //   {/* <div className='flex items-center justify-between shadow'>
-    //     <span>{username}</span>
 
-    //     <Button
-    //       className=''
-    //       onClick={() => {
-    //         handleDeletePost(id);
-    //       }}
-    //     >
-    //       Delete
-    //     </Button>
-    //   </div> */}
-    //   <div className='h-4/6 shadow '>
-    //     <img
-    //       className='object-contain h-full shadow mx-auto my-auto'
-    //       src={imgUrl}
-    //     ></img>
-    //   </div>
-    //    <div className='h-1/6 shadow '>
-    //     <p className=' '>{title}</p>
-    //   </div>
-    // </div> */}
   );
 };

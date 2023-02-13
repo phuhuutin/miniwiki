@@ -35,7 +35,8 @@ export const Navbar: React.FC<{}> = () => {
         };
         setMyUser(currentUser);
 
-        console.log(currentUser);
+        console.log(user);
+        console.log(user.getIdToken);
       } else {
         setMyUser(undefined);
         console.log("user is logged out");
@@ -46,11 +47,6 @@ export const Navbar: React.FC<{}> = () => {
     <nav className=' shadow bg-gray-100 border-gray-200 px-2 sm:px-4 py-2.5 rounded'>
       <div className='container flex flex-wrap items-center justify-between mx-auto'>
         <NavLink className='flex items-center' to={"/home"}>
-          {/* <img
-            src='https://images.theconversation.com/files/237977/original/file-20180925-149955-r3w501.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=754&fit=clip'
-            className='h-6 mr-3 sm:h-9'
-            alt='Logo'
-          /> */}
           <span className='h-6 w-3 mr-3 sm:h-9 bg-pink-400' />
           <span className='self-center text-xl font-semibold whitespace-nowrap dark:text-white'>
             MikiWiki

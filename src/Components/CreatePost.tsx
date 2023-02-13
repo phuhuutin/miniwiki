@@ -3,10 +3,15 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { Post } from "../Models/Post";
 import { Button, Card, Modal } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { WikiUser } from "../Models/WikiUser";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
+import { WikiLogin } from "./WikiLogin";
 type CreateProps = {
   handleAdding: (thepost: Post) => void;
 };
 export const CreatePost = ({ handleAdding }: CreateProps) => {
+  const [myUser, setMyUser] = useState<WikiUser>();
   const [isLoading, setIsLoading] = useState(false);
   const [httpError, setHttpError] = useState(null);
   const [search, setSearch] = useState("");
@@ -18,16 +23,37 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
     console.log(currentPost);
   }, [currentPost]);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+
+        const currentUser: WikiUser = {
+          uid: user.uid,
+          email: user.email as string,
+          isAuthenticated: true,
+        };
+        setMyUser(currentUser);
+
+        console.log(currentUser);
+      } else {
+        setMyUser(undefined);
+        console.log("user is logged out");
+      }
+    });
+  }, []);
+
   const callAPIs = async () => {
     if (search == "" || search === undefined) {
     } else {
-      const wikiData: [string, string] = await wikiAPI();
-      const imgUrl: string = await imgAPI();
+      const wikiData: [string, string, string] = await wikiAPI();
+      //const imgUrl: string = await imgAPI();
       const thePost: Post = {
         id: Math.random() * 10000,
         title: wikiData[0],
         texts: wikiData[1],
-        imgUrl: imgUrl,
+        imgUrl: wikiData[2],
         username: "unknown",
         likeCount: 0,
       };
@@ -36,24 +62,34 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
     }
   };
 
-  const wikiAPI = async (): Promise<[string, string]> => {
+  const wikiAPI = async (): Promise<[string, string, string]> => {
     setIsLoading(true);
-    let url: string = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&utf8=&format=json&origin=*`;
-    console.log(url);
+    let url: string = `https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrsearch=${search}&gsrlimit=4&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=2&exlimit=max&piprop=original&list=search&srsearch=${search}&srlimit=4&origin=*`;
+    //let url: string = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&utf8=&format=json&origin=*`;
+ 
     const response = await fetch(url, { method: "GET" });
 
     if (!response.ok) {
       throw new Error("Something went wrong");
     }
+    
     const responseJson = await response.json();
-    const responseData = responseJson.query.search[0].snippet;
-    const responseTitle = responseJson.query.search[0].title;
+    console.log(responseJson.query.pages);
+ 
+    var result = Object.keys(responseJson.query.pages).map((k)=>{
+      return [k, responseJson.query.pages[k]];
+    });
+    
+    const responseData: string  = result[0][1].extract;
+    const responseTitle: string  = result[0][1].title;
+    const responseImg: string =  result[0][1].original.source;
+    console.log(responseData);
     let div = document.createElement("div");
     div.innerHTML = responseData;
     var text = div.textContent || div.innerText || "";
     console.log(text);
     setIsLoading(false);
-    return [responseTitle, text];
+    return [responseTitle, responseData, responseImg];
   };
 
   const imgAPI = async (): Promise<string> => {
@@ -78,13 +114,6 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
     return <SpinnerLoading />;
   }
 
-  if (httpError) {
-    return (
-      <div className=' my-5 mx-auto'>
-        <p>{httpError}</p>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -131,12 +160,15 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
                   type='submit'
                   className=' rounded-lg btn p-2.5 ml-2 text-sm font-medium text-white'
                   onClick={(e) => {
-                    e.preventDefault();
-                    callAPIs().catch((error: any) => {
-                      setIsLoading(false);
-                      setHttpError(error.message);
-                    });
-                    setIsModalShow(true);
+                    if(search != ""){
+                      e.preventDefault();
+                      callAPIs().catch((error: any) => {
+                        setIsLoading(false);
+                        setHttpError(error.message);
+                      });
+                      setIsModalShow(true);
+                    }
+                    
                   }}
                 >
                   <svg
@@ -159,29 +191,40 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
             </div>
           </div>
           <div className='w-2/5 bg-pink-100 p-5'>
+          {myUser?.isAuthenticated ? <>
             <h5 className='mb-2 text-3xl font-bold text-gray-900'>
-              Are you New ?
+            Are you New ?
             </h5>
             <p className='mb-5 text-base dark:text-gray-400 sm:text-lg '>
-              Please Sign Up or Login to save cards you find in your profile
+              You can save what you find in your profile.
             </p>
-            <Link
-              to='/login'
-              type='button'
-              className='btn focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0'
-            >
-              Login
-            </Link>
+            
+          </> : ( 
+          <>
+            <h5 className='mb-2 text-3xl font-bold text-gray-900'>
+            Are you New ?
+            </h5>
+            <p className='mb-5 text-base dark:text-gray-400 sm:text-lg '>
+              Please Sign Up or Login to save cards you find in your profile.
+            </p>
+            
+              <WikiLogin />
+          </>
+          
+          )
+            
+              
+          }
           </div>
         </div>
       </Card>
       <Modal
         show={isModalShow}
         size='6xl'
-        onClose={() => setIsModalShow(false)}
+        onClose={() => {setIsModalShow(false); setCurrentPost(undefined);}}
         className='max-h-fit'
       >
-        <Modal.Header>{currentPost?.title}</Modal.Header>
+        <Modal.Header>{currentPost? currentPost.title: "404: Not Found" }</Modal.Header>
         <Modal.Body className=''>
           {currentPost &&
           currentPost?.title != "" &&
@@ -195,7 +238,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
               <img className='h-80 mx-auto' src={currentPost?.imgUrl} />
             </div>
           ) : (
-            <SpinnerLoading />
+            <img className="h-80 mx-auto" src="https://siliconvalleygazette.com/posts/what-is-the-404-not-found-error.png" />
           )}
         </Modal.Body>
         <Modal.Footer>
