@@ -8,7 +8,7 @@ import { SinglePostPage } from "./Components/SinglePostPage";
 import { WikiLogin } from "./Components/WikiLogin";
 
 export const App = () => {
-  const loadingComponent = <p>Keycloak is loading</p>;
+
   return (
     <>
       <div className='App flex flex-col h-screen justify-between'>

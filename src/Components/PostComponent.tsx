@@ -44,10 +44,10 @@ export const PostComponent = () => {
       setIsLoading(false);
     };
 
-    fetchPosts().catch((error: any) => {
-      setIsLoading(false);
-      setHttpError(error.message);
-    });
+    // fetchPosts().catch((error: any) => {
+    //   setIsLoading(false);
+    //   setHttpError(error.message);
+    // });
     //console.log(authState);
   }, []);
 
@@ -66,9 +66,9 @@ export const PostComponent = () => {
     setPosts(updatedPosts);
   };
 
-  if (isLoading) {
-    return <SpinnerLoading />;
-  }
+  // if (isLoading) {
+  //   return <SpinnerLoading />;
+  // }
 
   // if (httpError) {
   //   return (
