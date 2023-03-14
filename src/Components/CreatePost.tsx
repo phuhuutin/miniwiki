@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { Post } from "../Models/Post";
-import { Button, Card, Modal } from "flowbite-react";
+import { Button, Card, Carousel, Modal } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { WikiUser } from "../Models/WikiUser";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { WikiLogin } from "./WikiLogin";
+import { ShowingPost } from "./ShowingPost";
 type CreateProps = {
   handleAdding: (thepost: Post) => void;
 };
 export const CreatePost = ({ handleAdding }: CreateProps) => {
+  const [postCarousel, setPostCarousel] = useState<Post[]>();
   const [myUser, setMyUser] = useState<WikiUser>();
   const [isLoading, setIsLoading] = useState(false);
   const [httpError, setHttpError] = useState(null);
@@ -21,7 +23,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
   useEffect(() => {
     if (currentPost) handleAdding(currentPost);
     console.log(currentPost);
-  }, [currentPost]);
+  }, [currentPost, postCarousel]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -36,7 +38,6 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
         };
         setMyUser(currentUser);
 
-        console.log(currentUser);
       } else {
         setMyUser(undefined);
         console.log("user is logged out");
@@ -48,6 +49,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
     if (search == "" || search === undefined) {
     } else {
       const wikiData: [string, string, string] = await wikiAPI();
+   
       //const imgUrl: string = await imgAPI();
       const thePost: Post = {
         id: Math.random() * 10000,
@@ -57,8 +59,9 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
         username: "unknown",
         likeCount: 0,
       };
+    
+
       setCurrentPost(thePost);
-      console.log(currentPost);
     }
   };
 
@@ -74,21 +77,52 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
     }
     
     const responseJson = await response.json();
-    console.log(responseJson.query.pages);
  
     var result = Object.keys(responseJson.query.pages).map((k)=>{
       return [k, responseJson.query.pages[k]];
     });
-    
+ 
+
+    const postArray: Post[]=[];
+
+    result.map((post)=>{
+
+      
+      console.log(post);
+      const newPost: Post = {
+        id: 0,
+        title: "",
+        texts: "",
+        imgUrl: ""
+      }
+      newPost.title = post[1].title;
+      newPost.texts = post[1].extract;
+      newPost.id =  post[0];
+      if(post[1].original) newPost.imgUrl = post[1].original.source;
+      else {
+        newPost.imgUrl = "https://siliconvalleygazette.com/posts/what-is-the-404-not-found-error.png";
+      }
+
+      postArray.push(newPost);
+
+    });
+
+    setPostCarousel(postArray);
+
+
+
+    var responseImg: string = "https://siliconvalleygazette.com/posts/what-is-the-404-not-found-error.png";
+
     const responseData: string  = result[0][1].extract;
     const responseTitle: string  = result[0][1].title;
-    const responseImg: string =  result[0][1].original.source;
-    console.log(responseData);
-    let div = document.createElement("div");
-    div.innerHTML = responseData;
-    var text = div.textContent || div.innerText || "";
-    console.log(text);
+    if(result[0][1].original) responseImg = result[0][1].original.source;
+   
+    // let div = document.createElement("div");
+    // div.innerHTML = responseData;
+    // var text = div.textContent || div.innerText || "";
+    // console.log(text);
     setIsLoading(false);
+
     return [responseTitle, responseData, responseImg];
   };
 
@@ -165,6 +199,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
                       callAPIs().catch((error: any) => {
                         setIsLoading(false);
                         setHttpError(error.message);
+                        console.log(error);
                       });
                       setIsModalShow(true);
                     }
@@ -221,12 +256,12 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
       <Modal
         show={isModalShow}
         size='6xl'
-        onClose={() => {setIsModalShow(false); setCurrentPost(undefined);}}
+        onClose={() => {setIsModalShow(false); setCurrentPost(undefined); setPostCarousel([]); setSearch("");}}
         className='max-h-fit'
       >
-        <Modal.Header>{currentPost? currentPost.title: "404: Not Found" }</Modal.Header>
+        <Modal.Header>search for "{search}"</Modal.Header>
         <Modal.Body className=''>
-          {currentPost &&
+          {/* {currentPost &&
           currentPost?.title != "" &&
           currentPost?.texts != "" ? (
             <div className=''>
@@ -239,7 +274,20 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
             </div>
           ) : (
             <img className="h-80 mx-auto" src="https://siliconvalleygazette.com/posts/what-is-the-404-not-found-error.png" />
-          )}
+          )} */}
+
+
+        <div className=' mx-auto w-[96%] shadow-lg'>
+          <Carousel className='rounded-none'>
+            {postCarousel?.map((post) => (
+              <ShowingPost
+                key={post.id}
+                post={post}
+               // handleDeletePost={handleDeletePost}
+              />
+            ))}
+          </Carousel>
+        </div>  
         </Modal.Body>
         <Modal.Footer>
           <Button>I accept</Button>

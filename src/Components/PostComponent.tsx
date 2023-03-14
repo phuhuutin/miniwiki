@@ -97,7 +97,7 @@ export const PostComponent = () => {
               <ShowingPost
                 key={post.id}
                 post={post}
-                handleDeletePost={handleDeletePost}
+               // handleDeletePost={handleDeletePost}
               />
             ))}
           </Carousel>

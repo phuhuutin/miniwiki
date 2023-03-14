@@ -9,12 +9,12 @@ import { text } from "stream/consumers";
 
 type PostProps = {
   post: Post;
-  handleDeletePost: (id: number) => void;
+ // handleDeletePost: (id: number) => void;
 };
 
 export const ShowingPost = ({
   post: { id, username, title, texts, imgUrl, likeCount },
-  handleDeletePost,
+
 }: PostProps) => {
   return (
     <div className='w-full md:h-[450px] sm:h-[600px] 2xl:h-[600px]'>
