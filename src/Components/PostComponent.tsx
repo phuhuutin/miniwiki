@@ -6,15 +6,21 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { CreatePost } from "./CreatePost";
 import { Carousel } from "flowbite-react";
 import { data } from "./Type";
+import { useAuth } from "../Contexts/AuthContext";
+import { auth } from "../firebase";
 
 export const PostComponent = () => {
   const [posts, setPosts] = useState<Post[]>();
   const [postCarousel, setPostCarousel] = useState<Post[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
-
+  const {userCredential} = useAuth();
   useEffect(() => {
-    setPostCarousel(data);
+    const unsubcrible = auth.onAuthStateChanged((user)=>{
+      if(user){
+            console.log(user);
+          }
+      });
 
     const fetchPosts = async () => {
       const baseUrl: string = "http://localhost:8081/api/posts";
@@ -43,12 +49,8 @@ export const PostComponent = () => {
       setPosts(loadedPosts);
       setIsLoading(false);
     };
-
-    // fetchPosts().catch((error: any) => {
-    //   setIsLoading(false);
-    //   setHttpError(error.message);
-    // });
-    //console.log(authState);
+ 
+    return unsubcrible;
   }, []);
 
   const handleAdding = (thePost: Post) => {
@@ -66,31 +68,11 @@ export const PostComponent = () => {
     setPosts(updatedPosts);
   };
 
-  // if (isLoading) {
-  //   return <SpinnerLoading />;
-  // }
 
-  // if (httpError) {
-  //   return (
-  //     <div className='  my-5 mx-auto'>
-  //       <p>{httpError}</p>
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
       <>
-        {/* <div className='flex flex-wrap flex-row'>
-          {posts?.map((post) => (
-            <ShowingPost
-              key={post.id}
-              post={post}
-              handleDeletePost={handleDeletePost}
-            />
-          ))}
-        </div> */}
-
         <div className=' mx-auto w-[96%] shadow-lg'>
           <Carousel className='rounded-none'>
             {postCarousel?.map((post) => (

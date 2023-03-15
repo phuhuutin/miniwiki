@@ -21,57 +21,56 @@ export const WikiLogin = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [reEnterPassword, setReEnterPassword] = useState("");
   const [error, setError] = useState("");
-  const onLogin = (e: any) => {
-    e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        navigate("/home");
-        console.log(user);
-        setShowLogin(false);
-      })
-      .catch((error: any) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
-  };
+  // const onLogin = (e: any) => {
+  //   e.preventDefault();
+  //   signInWithEmailAndPassword(auth, email, password)
+  //     .then((userCredential) => {
+  //       // Signed in
+  //       const user = userCredential.user;
+  //       navigate("/home");
+  //       console.log(user);
+  //       setShowLogin(false);
+  //     })
+  //     .catch((error: any) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       console.log(errorCode, errorMessage);
+  //     });
+  // };
 
-  const isEmailAlreadyinUse = ():any =>{
-    const url: string = `http://localhost:8081/admin/checkemail?email=${email}`;
-    return fetch(url)
-        .then(response => response.json()); 
-  }
-  const createNewUserHandle = (e: any): any=>{
-    e.preventDefault();
-    if(error == ""){
-      createUserWithEmailAndPassword(auth, email, password).then((userCredential)=>{
-          const setUserClaimUrl: string = `http://localhost:8081/admin/user-claims/${userCredential.user.uid}`;
-          const setnewUsertoDatabase: string = `http://localhost:8081/admin/register`;
-          fetch(setUserClaimUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-          });
+  // const isEmailAlreadyinUse = ():any =>{
+  //   const url: string = `http://localhost:8081/admin/checkemail?email=${email}`;
+  //   return fetch(url)
+  //       .then(response => response.json()); 
+  // }
+  // const createNewUserHandle = (e: any): any=>{
+  //   e.preventDefault();
+  //   if(error == ""){
+  //     createUserWithEmailAndPassword(auth, email, password).then((userCredential)=>{
+  //         const setUserClaimUrl: string = `http://localhost:8081/admin/user-claims/${userCredential.user.uid}`;
+  //         const setnewUsertoDatabase: string = `http://localhost:8081/admin/register`;
+  //         fetch(setUserClaimUrl, {
+  //           method: 'POST',
+  //           headers: {
+  //             'Content-Type': 'application/json'
+  //           },
+  //         });
 
-          fetch(setnewUsertoDatabase, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({username: username, email: email})
-          });
+  //         fetch(setnewUsertoDatabase, {
+  //           method: 'POST',
+  //           headers: {
+  //             'Content-Type': 'application/json'
+  //           },
+  //           body: JSON.stringify({username: username, email: email})
+  //         });
 
 
-      })
+  //     })
     
-    }
+  //   }
    
-  }
+  // }
 
 
 

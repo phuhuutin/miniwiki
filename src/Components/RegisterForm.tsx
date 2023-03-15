@@ -1,8 +1,10 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { auth } from "../firebase";
 import { Button, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface RegisterForm {
     username : string,
@@ -13,6 +15,8 @@ interface RegisterForm {
 export const RegisterForm = () => {
     const { register, formState: { errors }, handleSubmit, watch } = useForm<RegisterForm>();
     const [isEmailinUse,setIsEmailinUse ] = useState(false);
+    const {signUpFirebase, logInFirebase, userCredential, signOutFirebase} = useAuth();
+    const navigate = useNavigate();
 
     const isEmailAlreadyinUse = (email: string):any =>{
         const url: string = `http://localhost:8081/admin/checkemail?email=${email}`;
@@ -20,7 +24,7 @@ export const RegisterForm = () => {
             .then(response => response.json()); 
       }
     const onSubmitRegister: SubmitHandler<RegisterForm> = (data) =>{
-        createUserWithEmailAndPassword(auth, data.email, data.passwords).then((userCredential)=>{
+      signUpFirebase(data.email, data.passwords).then((userCredential: any)=>{
           const setUserClaimUrl: string = `http://localhost:8081/admin/user-claims/${userCredential.user.uid}`;
           const setnewUsertoDatabase: string = `http://localhost:8081/admin/register`;
           fetch(setUserClaimUrl, {
@@ -28,6 +32,11 @@ export const RegisterForm = () => {
             headers: {
               'Content-Type': 'application/json'
             },
+          }).then(()=>{
+            signOutFirebase();
+            logInFirebase(data.email, data.passwords);
+            // console.log(userCredential);
+            navigate("/home");
           });
     
           fetch(setnewUsertoDatabase, {
@@ -39,7 +48,7 @@ export const RegisterForm = () => {
           });
           return userCredential.user.uid;
     
-      }).catch((err) => {
+      }).catch((err: any) => {
         console.log(err);
         setIsEmailinUse(true);
       });

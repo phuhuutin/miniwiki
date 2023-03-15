@@ -6,43 +6,24 @@ import { Button, Label, Modal, TextInput } from "flowbite-react";
 import { WikiLogin } from "./WikiLogin";
 import { WikiUser } from "../Models/WikiUser";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useAuth } from "../Contexts/AuthContext";
 export const Navbar: React.FC<{}> = () => {
+  const {currentUser, signOutFirebase} = useAuth();
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [myUser, setMyUser] = useState<WikiUser>();
   const handleLogout = () => {
-    signOut(auth)
+    signOutFirebase(auth)
       .then(() => {
         // Sign-out successful.
 
         navigate("/");
         console.log("Signed out successfully");
       })
-      .catch((error) => {
+      .catch((error: any) => {
         // An error happened.
       });
   };
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-
-        const currentUser: WikiUser = {
-          uid: user.uid,
-          email: user.email as string,
-          isAuthenticated: true,
-        };
-        setMyUser(currentUser);
-
-        console.log(user);
-        console.log(user.getIdToken);
-      } else {
-        setMyUser(undefined);
-        console.log("user is logged out");
-      }
-    });
-  }, []);
   return (
     <nav className=' shadow bg-gray-100 border-gray-200 px-2 sm:px-4 py-2.5 rounded'>
       <div className='container flex flex-wrap items-center justify-between mx-auto'>
@@ -60,7 +41,7 @@ export const Navbar: React.FC<{}> = () => {
           >
             Search
           </NavLink>
-          {!myUser?.isAuthenticated ? (
+          {!currentUser?.isAuthenticated ? (
             <WikiLogin />
           ) : (
             <>
@@ -78,6 +59,7 @@ export const Navbar: React.FC<{}> = () => {
               >
                 Sign Out
               </button>
+              {currentUser ? <p>hello, {currentUser.email}</p> : <></>}
             </>
           )}
         </div>
