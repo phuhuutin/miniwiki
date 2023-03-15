@@ -8,6 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { WikiLogin } from "./WikiLogin";
 import { ShowingPost } from "./ShowingPost";
+import { ShowingPostToAdd } from "./ShowingPostToAdd";
 type CreateProps = {
   handleAdding: (thepost: Post) => void;
 };
@@ -67,7 +68,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
 
   const wikiAPI = async (): Promise<[string, string, string]> => {
     setIsLoading(true);
-    let url: string = `https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrsearch=${search}&gsrlimit=4&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=2&exlimit=max&piprop=original&list=search&srsearch=${search}&srlimit=4&origin=*`;
+    let url: string = `https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrsearch=${search}&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=2&exlimit=max&piprop=original&list=search&srsearch=${search}&srlimit=4&origin=*`;
     //let url: string = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&utf8=&format=json&origin=*`;
  
     const response = await fetch(url, { method: "GET" });
@@ -117,10 +118,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
     const responseTitle: string  = result[0][1].title;
     if(result[0][1].original) responseImg = result[0][1].original.source;
    
-    // let div = document.createElement("div");
-    // div.innerHTML = responseData;
-    // var text = div.textContent || div.innerText || "";
-    // console.log(text);
+
     setIsLoading(false);
 
     return [responseTitle, responseData, responseImg];
@@ -261,35 +259,21 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
       >
         <Modal.Header>search for "{search}"</Modal.Header>
         <Modal.Body className=''>
-          {/* {currentPost &&
-          currentPost?.title != "" &&
-          currentPost?.texts != "" ? (
-            <div className=''>
-              <div className='space-y-6'>
-                <p className='text-base leading-relaxed text-gray-500 dark:text-gray-400'>
-                  {currentPost?.texts}
-                </p>
-              </div>
-              <img className='h-80 mx-auto' src={currentPost?.imgUrl} />
-            </div>
-          ) : (
-            <img className="h-80 mx-auto" src="https://siliconvalleygazette.com/posts/what-is-the-404-not-found-error.png" />
-          )} */}
-
-
         <div className=' mx-auto w-[96%] shadow-lg'>
           <Carousel className='rounded-none'>
             {postCarousel?.map((post) => (
-              <ShowingPost
+              <>
+              <ShowingPostToAdd
                 key={post.id}
                 post={post}
                // handleDeletePost={handleDeletePost}
               />
+              </>
             ))}
           </Carousel>
         </div>  
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="flex justify-end ">
           <Button>I accept</Button>
           <Button color='gray'>Decline</Button>
         </Modal.Footer>
