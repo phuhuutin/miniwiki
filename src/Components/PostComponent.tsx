@@ -14,7 +14,7 @@ export const PostComponent = () => {
   const [postCarousel, setPostCarousel] = useState<Post[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
-  const {userCredential} = useAuth();
+
   useEffect(() => {
     const unsubcrible = auth.onAuthStateChanged((user)=>{
       if(user){
@@ -49,7 +49,7 @@ export const PostComponent = () => {
       setPosts(loadedPosts);
       setIsLoading(false);
     };
- 
+    setPostCarousel(data);
     return unsubcrible;
   }, []);
 

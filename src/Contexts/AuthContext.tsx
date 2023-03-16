@@ -1,4 +1,4 @@
-import { User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { WikiUser } from "../Models/WikiUser";
 import { auth } from "../firebase";
@@ -31,8 +31,8 @@ export const AuthProvider = ({children}: AuthProviderProps) =>{
 
     const [currentUser, setCurrentUser] = useState<WikiUser>(defaultUser);
 
-    const userCredential = ()=>{
-       
+    const userCredentialFirebase = ()=>{
+       return auth.currentUser
         
     }
     const signUpFirebase = (email: string, password: string)=>{
@@ -40,13 +40,25 @@ export const AuthProvider = ({children}: AuthProviderProps) =>{
     }
 
     const logInFirebase = (email: string, password: string): Promise<UserCredential>  =>{
-        return signInWithEmailAndPassword(auth,email,password  );
+        return signInWithEmailAndPassword(auth,email,password)
+
+        ;
     }
 
     const signOutFirebase = ()=>{
         return signOut(auth).then(()=>{
             setCurrentUser(defaultUser);
         });
+    }
+    const tokenRefreshedFirebase = ()=>{
+        return auth.currentUser?.getIdToken(true);
+    }
+
+    const updateProfileFirebase= (b: { displayName?: string | null | undefined; photoURL?: string | null | undefined; })=>{
+        if(auth.currentUser){
+            updateProfile(auth.currentUser, b );
+        }
+       
     }
 
     useEffect(()=>{
@@ -71,7 +83,9 @@ export const AuthProvider = ({children}: AuthProviderProps) =>{
         signUpFirebase,
         logInFirebase,
         signOutFirebase,
-        userCredential
+        userCredentialFirebase,
+        tokenRefreshedFirebase,
+        updateProfileFirebase
     }
 
     return(

@@ -7,11 +7,13 @@ import { WikiLogin } from "./WikiLogin";
 import { WikiUser } from "../Models/WikiUser";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useAuth } from "../Contexts/AuthContext";
+import { endSession, getSession, isLoggedIn } from "../LocalSession";
 export const Navbar: React.FC<{}> = () => {
   const {currentUser, signOutFirebase} = useAuth();
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [myUser, setMyUser] = useState<WikiUser>();
+  const {email, accessToken, username} = getSession();
   const handleLogout = () => {
     signOutFirebase(auth)
       .then(() => {
@@ -19,6 +21,7 @@ export const Navbar: React.FC<{}> = () => {
 
         navigate("/");
         console.log("Signed out successfully");
+        endSession();
       })
       .catch((error: any) => {
         // An error happened.
@@ -41,7 +44,7 @@ export const Navbar: React.FC<{}> = () => {
           >
             Search
           </NavLink>
-          {!currentUser?.isAuthenticated ? (
+          {!accessToken ? (
             <WikiLogin />
           ) : (
             <>
@@ -59,7 +62,7 @@ export const Navbar: React.FC<{}> = () => {
               >
                 Sign Out
               </button>
-              {currentUser ? <p>hello, {currentUser.email}</p> : <></>}
+              {username != null ? <p>hello, {username}</p> : <></>}
             </>
           )}
         </div>

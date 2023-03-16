@@ -15,7 +15,7 @@ interface RegisterForm {
 export const RegisterForm = () => {
     const { register, formState: { errors }, handleSubmit, watch } = useForm<RegisterForm>();
     const [isEmailinUse,setIsEmailinUse ] = useState(false);
-    const {signUpFirebase, logInFirebase, userCredential, signOutFirebase} = useAuth();
+    const {signUpFirebase, tokenRefreshedFirebase, updateProfileFirebase} = useAuth();
     const navigate = useNavigate();
 
     const isEmailAlreadyinUse = (email: string):any =>{
@@ -25,6 +25,14 @@ export const RegisterForm = () => {
       }
     const onSubmitRegister: SubmitHandler<RegisterForm> = (data) =>{
       signUpFirebase(data.email, data.passwords).then((userCredential: any)=>{
+
+        updateProfileFirebase(
+          { 
+            displayName: data.username,
+          }
+        );
+
+
           const setUserClaimUrl: string = `http://localhost:8081/admin/user-claims/${userCredential.user.uid}`;
           const setnewUsertoDatabase: string = `http://localhost:8081/admin/register`;
           fetch(setUserClaimUrl, {
@@ -33,9 +41,12 @@ export const RegisterForm = () => {
               'Content-Type': 'application/json'
             },
           }).then(()=>{
-            signOutFirebase();
-            logInFirebase(data.email, data.passwords);
+            // signOutFirebase();
+            // logInFirebase(data.email, data.passwords);
             // console.log(userCredential);
+            tokenRefreshedFirebase();
+            console.log(1);
+            console.log(userCredential);
             navigate("/home");
           });
     

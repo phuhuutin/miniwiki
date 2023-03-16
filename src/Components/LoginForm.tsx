@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Label, TextInput } from "flowbite-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
+import { startSession } from "../LocalSession";
 
 type LoginFormProps = {
     setShowLogin: Dispatch<SetStateAction<boolean>>,
@@ -24,12 +25,13 @@ export const LoginForm = ({setShowLogin}: LoginFormProps) => {
         //signInWithEmailAndPassword(auth, data.email, data.passwords)
         
         logInFirebase(data.email, data.passwords)
-        .then((userCredential: any) => {
+        .then((userCredential:  any ) => {
           // Signed in
           const user = userCredential.user;
           navigate("/home");
           console.log(user);
           setShowLogin(false);
+          startSession(data.email, user.accessToken, user.displayName );
         })
         .catch((error: any) => {
           const errorCode = error.code;
