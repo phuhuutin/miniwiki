@@ -36,7 +36,9 @@ export const Navbar: React.FC<{}> = () => {
             MikiWiki
           </span>
         </NavLink>
-        <div className='flex '>
+       
+        <div className='flex items-center '>
+          {username != null ? <p className="m-auto pr-2 text-md font-semibold ">hello, {username}</p> : <></>}
           <NavLink
             to='/browse'
             className='block py-2 pr-3 self-center  text-md font-semibold whitespace-nowrap '
@@ -44,6 +46,7 @@ export const Navbar: React.FC<{}> = () => {
           >
             Search
           </NavLink>
+         
           {!accessToken ? (
             <WikiLogin />
           ) : (
@@ -55,14 +58,14 @@ export const Navbar: React.FC<{}> = () => {
               >
                 My Profile
               </a>
-              <button
+              <Button
                 type='button'
-                className=' btn focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0'
+                className=''
                 onClick={handleLogout}
               >
                 Sign Out
-              </button>
-              {username != null ? <p>hello, {username}</p> : <></>}
+              </Button>
+             
             </>
           )}
         </div>

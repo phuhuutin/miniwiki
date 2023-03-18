@@ -13,10 +13,18 @@ export const startSession = (theEmail, thetoken, theUsername) => {
     }
   }
   
+ 
   export const endSession = () => {
     sessionStorage.clear();
   }
   
   export const isLoggedIn = () => {
     return getSession().accessToken;
+  }
+  export const getCurrentUserToken = () => {
+    return getSession().accessToken;
+  }
+
+  export const getCurrentUserEmail = () =>{
+    return getSession().email;
   }

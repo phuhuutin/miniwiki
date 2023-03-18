@@ -9,10 +9,10 @@ import { auth } from "../firebase";
 import { WikiLogin } from "./WikiLogin";
 import { ShowingPost } from "./ShowingPost";
 import { ShowingPostToAdd } from "./ShowingPostToAdd";
-type CreateProps = {
-  handleAdding: (thepost: Post) => void;
-};
-export const CreatePost = ({ handleAdding }: CreateProps) => {
+// type CreateProps = {
+//   handleAdding: (thepost: Post) => void;
+// };
+export const CreatePost = () => {
   const [postCarousel, setPostCarousel] = useState<Post[]>();
   const [myUser, setMyUser] = useState<WikiUser>();
   const [isLoading, setIsLoading] = useState(false);
@@ -21,10 +21,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
   const [currentPost, setCurrentPost] = useState<Post>();
   const [isModalShow, setIsModalShow] = useState(false);
 
-  useEffect(() => {
-    if (currentPost) handleAdding(currentPost);
-    console.log(currentPost);
-  }, [currentPost, postCarousel]);
+  
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -89,7 +86,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
     result.map((post)=>{
 
       
-      console.log(post);
+      
       const newPost: Post = {
         id: 0,
         title: "",
@@ -103,7 +100,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
       else {
         newPost.imgUrl = "https://siliconvalleygazette.com/posts/what-is-the-404-not-found-error.png";
       }
-
+      console.log(newPost);
       postArray.push(newPost);
 
     });
@@ -188,7 +185,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
                     onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
-                <button
+                <Button
                   type='submit'
                   className=' rounded-lg btn p-2.5 ml-2 text-sm font-medium text-white'
                   onClick={(e) => {
@@ -219,7 +216,7 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
                     ></path>
                   </svg>
                   <span className='sr-only'>Search</span>
-                </button>
+                </Button>
               </form>
             </div>
           </div>
@@ -261,20 +258,19 @@ export const CreatePost = ({ handleAdding }: CreateProps) => {
         <Modal.Body className=''>
         <div className=' mx-auto w-[96%] shadow-lg'>
           <Carousel className='rounded-none'>
-            {postCarousel?.map((post) => (
-              <>
+            {postCarousel?.map((thepost) => (
+              
               <ShowingPostToAdd
-                key={post.id}
-                post={post}
-               // handleDeletePost={handleDeletePost}
+                key={thepost.id}
+                post={thepost}
               />
-              </>
+              
             ))}
           </Carousel>
         </div>  
         </Modal.Body>
         <Modal.Footer className="flex justify-end ">
-          <Button>I accept</Button>
+          <Button className="btn" onClick={()=>{console.log("title")}}>I accept</Button>
           <Button color='gray'>Decline</Button>
         </Modal.Footer>
       </Modal>

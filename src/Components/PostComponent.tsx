@@ -85,7 +85,7 @@ export const PostComponent = () => {
           </Carousel>
         </div>
 
-        <CreatePost handleAdding={handleAdding} />
+        <CreatePost />
       </>
     </>
   );

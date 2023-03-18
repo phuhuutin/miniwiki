@@ -6,4 +6,5 @@ export type Post = {
   imgUrl: string;
   likeCount?: number | 0;
   commentList?: Comment[];
+  postDate?: String;
 };

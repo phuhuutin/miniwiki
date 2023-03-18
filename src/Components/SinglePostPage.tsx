@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Post } from "../Models/Post";
 import { Comment } from "../Models/Comment";
 import { ShowingComment } from "./ShowingComment";
+import { PostComment } from "./PostComment";
 
 export const SinglePostPage = () => {
   const [post, setPost] = useState<Post>();
@@ -28,8 +29,9 @@ export const SinglePostPage = () => {
         texts: responseJson.body,
         imgUrl: responseJson.imgUrl,
         likeCount: 0,
+        postDate: responseJson.postdate,
       };
-
+      console.log(responseJson);
       const loadedComments: Comment[] = [];
 
       for (const key in responseJson.comment) {
@@ -53,6 +55,12 @@ export const SinglePostPage = () => {
     });
   }, []);
 
+  const handleAddComment = (newComment: Comment) => {
+   
+    setComments([...comments as Comment[], newComment]);
+  };
+
+
   return (
     <div className=' flex md:flex-row h-auto md:h-fit shadow flex-col '>
       <img
@@ -63,13 +71,18 @@ export const SinglePostPage = () => {
       <div className=' flex flex-col h-auto m-2 rounded-md border-indigo-600 shadow p-3'>
         <div className='flex justify-between'>
           <h2 className='pb-2 text-lg'>{post?.title}</h2>
-          <p className='pb-2'>{post?.username}</p>
+          <div>
+          <p className='pb'>{post?.username}</p>
+          <p className="text-xs">{post?.postDate}</p>
+          </div>
+          
         </div>
+ 
         <div className=' '>
           <p className='pb-2 '>{post?.texts}</p>
         </div>
 
-        <div className='m-1 flex justify-around border-solid border-y-2'>
+        <div className='m-1 flex justify-around border-solid border-y-2 border-black'>
           <div className='flex mr-2 text-gray-700 text-sm mr-3'>
             <svg
               fill='none'
@@ -78,9 +91,9 @@ export const SinglePostPage = () => {
               stroke='currentColor'
             >
               <path
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                stroke-width='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
                 d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
               />
             </svg>
@@ -94,9 +107,9 @@ export const SinglePostPage = () => {
               stroke='currentColor'
             >
               <path
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                stroke-width='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
                 d='M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z'
               />
             </svg>
@@ -110,9 +123,9 @@ export const SinglePostPage = () => {
               stroke='currentColor'
             >
               <path
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                stroke-width='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
                 d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
               />
             </svg>
@@ -127,7 +140,8 @@ export const SinglePostPage = () => {
             body={comment.body}
           />
         ))}
-      </div>
+        <PostComment postId={postId} handleAddComment={handleAddComment} />
+    </div>
     </div>
   );
 };
