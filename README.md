@@ -1,3 +1,8 @@
+#Introduction
+This app is called MiniWiki because i make use of the wikipedia APIs to get the informatin (defination and pictures) from user given topic (string) which
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
