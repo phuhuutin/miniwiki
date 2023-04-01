@@ -3,15 +3,20 @@ import { Post } from "../Models/Post";
 import { Comment } from "../Models/Comment";
 import { ShowingComment } from "./ShowingComment";
 import { PostComment } from "./PostComment";
+import { getSession } from "../LocalSession";
 
 export const SinglePostPage = () => {
   const [post, setPost] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
+  const [isCurrentUserAlreadylike, setIsCurrentUserAlreadylike] = useState(false);
+  
+  const {email, accessToken, username} = getSession();
 
   const postId = window.location.pathname.split("/")[2];
   useEffect(() => {
+
     const fetchPosts = async () => {
       const baseUrl: string = `http://localhost:8081/api/posts/getPostById?postId=${postId}`;
 
@@ -30,8 +35,9 @@ export const SinglePostPage = () => {
         imgUrl: responseJson.imgUrl,
         likeCount: 0,
         postDate: responseJson.postdate,
+        likeList: new Set([...responseJson.likedUserList]),
       };
-      console.log(responseJson);
+      console.log(loadedPost);
       const loadedComments: Comment[] = [];
 
       for (const key in responseJson.comment) {
@@ -42,11 +48,13 @@ export const SinglePostPage = () => {
         });
       }
 
+      if( accessToken && loadedPost.likeList?.has(email as string)){
+        setIsCurrentUserAlreadylike(true);
+      }
+
       setPost(loadedPost);
       setIsLoading(false);
       setComments(loadedComments);
-
-      console.log(comments);
     };
 
     fetchPosts().catch((error: any) => {
@@ -59,6 +67,61 @@ export const SinglePostPage = () => {
    
     setComments([...comments as Comment[], newComment]);
   };
+
+  const handleAddLike = ()=>{
+    let AddorRemoveUrl: string = "";
+    if(!isCurrentUserAlreadylike){
+      AddorRemoveUrl = `http://localhost:8081/api/posts/secured/addLike?postId=${postId}`;
+    } else {
+      AddorRemoveUrl = `http://localhost:8081/api/posts/secured/removeLike?postId=${postId}`;
+    }
+
+    if(accessToken){
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      };
+      fetch(AddorRemoveUrl, {
+        method: 'PUT',
+        headers: headers,
+       
+       }).then(()=>{
+        
+          const loadPost: Post = {
+            id: post!.id ,
+            username: post!.username,
+            title: post!.title,
+            texts: post!.texts,
+            imgUrl: post!.imgUrl,
+            likeCount: 0,
+            postDate: post!.postDate,
+            likeList: undefined,
+          };
+         
+        
+          if(!isCurrentUserAlreadylike) {
+            setIsCurrentUserAlreadylike(true);
+            loadPost.likeList = post?.likeList?.add(email as string);
+
+          }
+          
+          
+          
+          else {
+            setIsCurrentUserAlreadylike(false);
+            post?.likeList?.delete(email as string);
+            loadPost.likeList = post?.likeList;
+          }
+          
+          setPost(loadPost);
+          
+        }
+      ).catch(error => console.error(error))
+    
+
+}
+
+  }
 
 
   return (
@@ -89,15 +152,20 @@ export const SinglePostPage = () => {
               viewBox='0 0 24 24'
               className='w-4 h-4 mr-1'
               stroke='currentColor'
+              onClick={handleAddLike}
             >
               <path
                 strokeLinecap='round'
                 strokeLinejoin='round'
                 strokeWidth='2'
                 d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
+                fill={isCurrentUserAlreadylike ? "#FFC0CB" : undefined}
               />
+               
+
+
             </svg>
-            <span>{post?.likeCount}</span>
+            <span>{post?.likeList?.size}</span>
           </div>
           <div className='flex mr-2 text-gray-700 text-sm mr-8'>
             <svg

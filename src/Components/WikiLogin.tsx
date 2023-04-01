@@ -77,7 +77,7 @@ export const WikiLogin = () => {
   return (
     <>
       <React.Fragment>
-        <Button className=" text-white bg-pink-300 hover:bg-pink-200 text-center" onClick={() => setShowLogin(true)}>Login</Button>
+        <Button className=" text-white p-0" onClick={() => setShowLogin(true)}>Login</Button>
         <Modal
           show={showLogin}
           size='md'

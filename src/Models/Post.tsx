@@ -7,4 +7,5 @@ export type Post = {
   likeCount?: number | 0;
   commentList?: Comment[];
   postDate?: String;
+  likeList?: Set<String>;
 };

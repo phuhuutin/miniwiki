@@ -1,7 +1,9 @@
 import { Button } from "flowbite-react";
 import {useState } from "react"
-import { getCurrentUserEmail, getCurrentUserToken } from "../LocalSession";
+import { getCurrentUserEmail, getCurrentUserToken, getSession, isLoggedIn } from "../LocalSession";
 import { Comment } from "../Models/Comment";
+import { WikiLogin } from "./WikiLogin";
+import { useNavigate } from "react-router-dom";
 
 
 type postCommentProps = {
@@ -10,6 +12,8 @@ type postCommentProps = {
 }
 
 export const PostComment = ({postId, handleAddComment}:postCommentProps)=>{
+    const {email, accessToken, username} = getSession();
+   
 
     const [commentText, setCommentText] = useState("");
 
@@ -65,7 +69,10 @@ export const PostComment = ({postId, handleAddComment}:postCommentProps)=>{
                     required
                     onChange={(e) => setCommentText(e.target.value)}
                 />
-                <button className="border border-black p-1 border-l-0" onClick={handleAddCommentRequest}>Comment</button>
+                {isLoggedIn() ?  <button className="border border-black p-1 border-l-0" onClick={handleAddCommentRequest}>Comment</button>:
+                <WikiLogin/>
+                }
+               
 
         </div>
     )

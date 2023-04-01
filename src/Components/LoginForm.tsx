@@ -28,7 +28,7 @@ export const LoginForm = ({setShowLogin}: LoginFormProps) => {
         .then((userCredential:  any ) => {
           // Signed in
           const user = userCredential.user;
-          navigate("/home");
+          navigate(window.location.pathname);
           console.log(user);
           setShowLogin(false);
           startSession(data.email, user.accessToken, user.displayName );

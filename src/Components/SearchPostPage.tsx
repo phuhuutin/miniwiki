@@ -31,7 +31,7 @@ export const SearchPostPage = () => {
       const responseJson = await response.json();
       const responseData = responseJson.content;
       const loadedPosts: Post[] = [];
-      console.log(responseJson);
+      //console.log(responseJson);
       setTotalPages(responseJson.totalPages);
       setTotalElements(responseJson.totalElements);
       for (const key in responseData) {
